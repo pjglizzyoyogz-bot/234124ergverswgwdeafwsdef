@@ -1,6 +1,4 @@
-    script_key = "k8YJvEVlhJpesFPpTm5Bi4V6ccKYAwff"
-
-    -- Single execution guard
+ -- Single execution guard
     if getgenv then
         local g = getgenv()
         if g.__SNIPER_SCRIPT_LOADED then
