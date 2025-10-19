@@ -130,6 +130,8 @@
         end
         
         local isMobile = shouldScaleForDevice()
+        -- Expose mobile state globally so main UI can check it
+        _G.__AJ_IS_MOBILE = isMobile
         local rootScale = nil
         
         -- Only create and attach UIScale if on mobile
@@ -997,7 +999,7 @@
     screenGui.ResetOnSpawn = false
 
     -- Main UI scale: Only apply on mobile (matches loader behavior)
-    if isMobile and _G.__AJ_ROOT_SCALE then
+    if _G.__AJ_IS_MOBILE and _G.__AJ_ROOT_SCALE then
         local mainScale = Instance.new("UIScale")
         mainScale.Name = "MainUIScale"
         mainScale.Scale = _G.__AJ_ROOT_SCALE.Scale or 1
