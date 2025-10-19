@@ -1,4 +1,4 @@
- -- Single execution guard
+-- Single execution guard
     if getgenv then
         local g = getgenv()
         if g.__SNIPER_SCRIPT_LOADED then
@@ -997,23 +997,25 @@
     screenGui.ResetOnSpawn = false
 
     -- Main UI scale: Only apply on mobile (matches loader behavior)
-    if _G.__AJ_IS_MOBILE and _G.__AJ_ROOT_SCALE then
-        local mainScale = Instance.new("UIScale")
-        mainScale.Name = "MainUIScale"
-        mainScale.Scale = _G.__AJ_ROOT_SCALE.Scale or 1
-        mainScale.Parent = screenGui
+    if _G.__AJ_IS_MOBILE then
+        if _G.__AJ_ROOT_SCALE then
+            local mainScale = Instance.new("UIScale")
+            mainScale.Name = "MainUIScale"
+            mainScale.Scale = _G.__AJ_ROOT_SCALE.Scale or 1
+            mainScale.Parent = screenGui
 
-        -- Listen for root scale changes if available
-        task.spawn(function()
-            local last = mainScale.Scale
-            while screenGui.Parent do
-                local s = _G.__AJ_ROOT_SCALE and _G.__AJ_ROOT_SCALE.Scale or last
-                if math.abs((s or 1) - (mainScale.Scale or 1)) > 1e-3 then
-                    mainScale.Scale = s
+            -- Listen for root scale changes if available
+            task.spawn(function()
+                local last = mainScale.Scale
+                while screenGui.Parent do
+                    local s = _G.__AJ_ROOT_SCALE and _G.__AJ_ROOT_SCALE.Scale or last
+                    if math.abs((s or 1) - (mainScale.Scale or 1)) > 1e-3 then
+                        mainScale.Scale = s
+                    end
+                    task.wait(0.2)
                 end
-                task.wait(0.2)
-            end
-        end)
+            end)
+        end
     end
 
     -- Tooltip overlay ScreenGui (not scaled) so tooltips match mouse pixels
@@ -1374,7 +1376,12 @@
     titleText.Size = UDim2.new(1, -90, 1, 0)
     titleText.Position = UDim2.new(0, 20, 0, 0)
     titleText.BackgroundTransparency = 1
-    titleText.Text = 'SNIPER v1 <font color="rgb(170,170,170)" size="12">| Premium</font>'
+    -- Show (Mobile) suffix on mobile devices
+    if _G.__AJ_IS_MOBILE then
+        titleText.Text = 'SNIPER v1 <font color="rgb(170,170,170)" size="12">| Premium (Mobile)</font>'
+    else
+        titleText.Text = 'SNIPER v1 <font color="rgb(170,170,170)" size="12">| Premium</font>'
+    end
     titleText.RichText = true
     titleText.TextColor3 = Color3.fromRGB(255, 255, 255)
     titleText.TextSize = 16
@@ -6134,5 +6141,3 @@
 
     -- Start the real-time update system
     startRealTimeUpdates()
-
-    print("SNIPER v1 Loaded")
